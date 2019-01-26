@@ -1,7 +1,7 @@
 module.exports = {
     entry: (__dirname,"./src/app.js"),
     output: {
-      path: '/Users/fujinakashuutasuku/dev/liberty/dev/Liberty/app/dist',
+      path: '/Users/fujinakashuutasuku/dev/liberty/dev/Liberty/app/src',
       filename: 'bundle.js'
     },
     devtool: 'inline-source-map',
