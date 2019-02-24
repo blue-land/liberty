@@ -37,7 +37,7 @@ def routing(env):
         content_byte = env.get('wsgi.input').read(int(content_length))
         content_str =content_byte.decode('utf-8')
         args = json.loads(content_str)
-        body =eval(f'init.{i}')(args['content'])
+        body =eval(f'init.{i}')(args)
         return status, headers, body
     return not_found(env)
 
@@ -51,6 +51,7 @@ def app(env, start_response):
 
 def main(argv):
     httpd = make_server('localhost', 3000, app)
+    print ("Serving on port 3000...")
     httpd.serve_forever()
     return 0
 

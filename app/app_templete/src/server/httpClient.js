@@ -1,53 +1,29 @@
-export default class HttpClient{
-constructor(){
-    this.host = "localhost";
-    this.port = 3000;
-}
 
-static async Post(path,para,json_flag=true){
+export default class HttpClient {
+
+    static host = "localhost";
+    static port = '3000';
+
+    static async Post(path, para, json_flag = true) {
+        const uri = 'http://' + this.host + ':' + this.port + path
         const options = {
-            host: this.host,
-            port: this.port,
             method: "POST",
-            path: path,
-            headers: {
-                "Content-Type": "application/json"
-            }
+            uri: uri,
+            json: para
         };
-        var content= para;
-this.request(options,content)
+        var response = await this.Request(options)
+        return response
+    }
 
-}
-
-
-static request(options,content){
-    const http = require("http");
-    const addReq = http.request(options, res => {
-        res.setEncoding("utf-8");
-        res.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
-            return chunk
-          });
-          console.log(res)
-        });
-    addReq.write(JSON.stringify({ json:true, content:content}));
-    addReq.end()
-
-}
-
-
-// static async request(options,content){
-//     const http = require("http");
-//     const addReq = http.request(options, res => {
-//         res.setEncoding("utf-8");
-//         res.on('data', (chunk) => {
-//             console.log(`BODY: ${chunk}`);
-//             return chunk
-//           });
-//           console.log(res)
-//         });
-//     addReq.write(JSON.stringify({ json:true, content:content}));
-//     addReq.end();   
-// }
-
+    static async Request(options) {
+        var rp = require('request-promise');
+        var response = await rp(options)
+            .then(function (parsedBody) {
+                return Promise.resolve(parsedBody)
+            })
+            .catch(function (err) {
+                return Promise.resolve(err)
+            })
+        return response
+    }
 }
