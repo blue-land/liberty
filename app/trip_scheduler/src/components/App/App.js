@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Switch } from 'antd';
+import { Switch,Button } from 'antd';
 import '../../style/common.css';
 import 'antd/dist/antd.css';
-import {onChange} from '../../actions/common.js';
+import {onChange,onClick} from '../../actions/common.js';
 import {activeRender} from '../Hoge/Hoge.js';
 
 class App extends Component {
@@ -10,6 +10,7 @@ class App extends Component {
     super(props);
     this.state={
         activeSwitch:false,
+        greeting:null
     };
   }
 
@@ -20,6 +21,8 @@ class App extends Component {
       <div className='Switch-txt'>
       Please Activate
       </div>
+      {this.state.greeting}
+      <Button type="primary" onClick ={onClick.bind(this)}>greeting</Button>
       <Switch
           onChange={onChange.bind(this)} />
         
