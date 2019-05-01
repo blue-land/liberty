@@ -4,14 +4,17 @@ from sklearn import preprocessing
 from sklearn.externals import joblib
 import codecs
 
+MODEL_FILE_NAME = 'pickle_model.sav'
+WATT_DATA = "./csv/juyo-2016.csv"
+TEMP_DATA = "./csv/data_1.csv"
 
 
 #説明変数を読み込む
 # 電力データの読み込み
-with codecs.open("./csv/juyo-2016.csv", "r", "Shift-JIS", "ignore") as file:
+with codecs.open(WATT_DATA, "r", "Shift-JIS", "ignore") as file:
     kw_df = pd.read_csv(file, delimiter=",")
 # 気温データの読み込み
-with codecs.open("./csv/data_1.csv", "r", "Shift-JIS", "ignore") as file:
+with codecs.open(TEMP_DATA, "r", "Shift-JIS", "ignore") as file:
     temp_df = pd.read_csv(file, delimiter=",")
 # データの結合
 df = kw_df
@@ -41,14 +44,17 @@ y = pp.values.flatten()
 from sklearn import model_selection
 # ラベル付きデータをトレーニングセット (X_train, y_train)とテストセット (X_test, y_test)に分割
 X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=.2, random_state=42)
+# 正規化のモジュールを読み込む
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
 
 
-
-print(df.head(30))
-
-
-# 学習モデルをデシリアライズ(計算制度がなぜがガタ落ち)
-model = joblib.load('model.pkl')
+# pickleを使用
+import pickle
+model = pickle.load(open(MODEL_FILE_NAME, 'rb'))
 
 # 計算制度
 print(model.score(X_test,y_test))
