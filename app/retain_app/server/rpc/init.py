@@ -10,6 +10,11 @@ def cat(args):
         mew += 'ほぇ〜 '
     return mew
 
+def upload(args):
+    print("upload")
+    print(args)
+    return []
+
 
 if __name__ == '__main__':
     greeting(**kwargs)

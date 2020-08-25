@@ -35,8 +35,12 @@ def routing(env):
         headers = [('Content-Type', 'text/plain; charset=utf-8')]
         content_length = env.get('CONTENT_LENGTH', 0)
         content_byte = env.get('wsgi.input').read(int(content_length))
-        content_str =content_byte.decode('utf-8')
-        args = json.loads(content_str)
+        content_type = env.get('CONTENT_TYPE')
+        if "multipart/form-data" in content_type:
+            args = content_byte
+        else:
+            content_str =content_byte.decode('utf-8')
+            args = json.loads(content_str)
         body =eval(f'init.{i}')(args)
         return status, headers, body
     return not_found(env)
@@ -44,7 +48,10 @@ def routing(env):
 
 def app(env, start_response):
     status, headers, body_raw = routing(env)
-    body = [bytes(line, encoding='utf-8') for line in body_raw.splitlines()]
+    if body_raw:
+        body = [bytes(line, encoding='utf-8') for line in body_raw.splitlines()]
+    else:
+        body=[]
     start_response(status, headers)
     return body
 
